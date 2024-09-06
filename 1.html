@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Common Array Function</title>
+</head>
+<body>
+
+<h2>Common elements of arry : <div class="array"></div></h2>
+
+<script>
+    function commonElement(arr1, arr2){
+        let comElement = [];
+        let eleCount = {};
+
+        for(i = 0; i < arr1.length; i++){
+            if(!eleCount[arr1[i]]){
+                eleCount[arr1[i]] = 1;
+            }
+        }
+
+        for(j = 0; j<arr2.length; j++){
+            if(eleCount[arr2[j]]){
+                comElement.push(arr2[j]);
+                eleCount[arr2[j]] = 0;
+            }
+        }
+
+        return comElement;
+    }
+
+    const array1 = [1,2,3,4,5,6];
+    const array2 = [3,4,5,6,7,8];
+
+    var result = commonElement(array1, array2);
+
+    console.log(result);
+
+    document.querySelector('.array').innerHTML = result;
+
+
+    
+</script>
+    
+</body>
+</html>

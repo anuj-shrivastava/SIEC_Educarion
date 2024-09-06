@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>
+      Employees by department :
+      <div class="array"></div>
+    </h2>
+
+    <script>
+      function EmployeesByDepartment(employees) {
+        const departmentGroups = {};
+
+        employees.forEach((employee) => {
+          const department = employee.department;
+          const name = employee.name;
+
+          if (!departmentGroups[department]) {
+            departmentGroups[department] = [];
+          }
+          departmentGroups[department].push(name);
+        });
+
+        Object.keys(departmentGroups).forEach((department) => {
+          if (departmentGroups[department].length <= 1) {
+            delete departmentGroups[department];
+          }
+        });
+
+        return departmentGroups;
+      }
+
+      const employees = [
+        { name: "Alice", department: "Engineering" },
+        { name: "Bob", department: "HR" },
+        { name: "Charlie", department: "Engineering" },
+        { name: "Dave", department: "HR" },
+        { name: "Eve", department: "Marketing" },
+      ];
+
+      const result = EmployeesByDepartment(employees);
+        console.log(result);
+
+      let resultHTML = "";
+      for (const department in result) {
+        resultHTML += `<strong>${department}:</strong> ${result[
+          department
+        ].join(", ")}<br>`;
+      }
+
+      document.querySelector(".array").innerHTML = resultHTML;
+    </script>
+  </body>
+</html>

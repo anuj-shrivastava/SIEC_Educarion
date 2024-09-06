@@ -1,0 +1,28 @@
+To perform a full backup of a MySQL database and restore it to a different server, we can use the mysqldump command to create a SQL dump file containing the database structure and data, then transfer that file to the new server and import it into a newly created database on that server using the mysql command.
+
+we can use the following steps:
+
+1) Backup on the Source Server:
+
+open the terminal and write the command: 
+mysqldump -u username -p database_name > backup_filename.sql
+
+**
+username = MySQL usernane
+database_name = name of the databse which needs backup
+backup_filename.sql = name of the backup file
+**
+
+2) Transfer the Backup File:
+Transfer the backup .sql file to the target server.
+
+
+3) Restore the Backup:
+On the target server, restore the database using the mysql command:
+mysql -u username -p database_name < /path/to/destination/backup_filename.sql
+
+**
+username = MySQL usernane
+database_name = name of the databse which needs backup
+backup_filename.sql = name of the backup file
+**

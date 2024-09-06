@@ -1,0 +1,77 @@
+Possible Causes of the Permission Issue
+Incorrect File Permissions:
+
+The files or directories within /public/images may not have the correct read permissions for the user running the Nginx process.
+Incorrect Ownership:
+
+The files or directories may not be owned by the correct user or group that Nginx runs as.
+Directory Permissions:
+
+The parent directories of /public/images might not have the correct permissions, preventing Nginx from traversing the path.
+SELinux or AppArmor Restrictions:
+
+On systems using SELinux or AppArmor, additional security policies might restrict access to the files.
+
+
+
+
+
+Steps to Resolve the Issue
+1. Check Nginx User
+Find out the user Nginx is running as. This is typically defined in the Nginx configuration file (e.g., /etc/nginx/nginx.conf).
+=> grep 'user ' /etc/nginx/nginx.conf
+
+2. Check and Correct Ownership
+Ensure that the /var/www/html directory and its subdirectories are owned by the correct user and group. For example, if Nginx runs as www-data, the ownership should be:
+=> sudo chown -R www-data:www-data /var/www/html
+
+3. Check and Correct Permissions
+Set appropriate permissions for files and directories. For serving static files, a common setup is:
+
+Directories: 755 (rwxr-xr-x)
+=> sudo find /var/www/html -type d -exec chmod 755 {} \;
+
+Files: 644 (rw-r--r--)
+=> sudo find /var/www/html -type f -exec chmod 644 {} \;
+
+
+4. Check Parent Directory Permissions
+Ensure that the parent directories also have the correct permissions. For example, if /var/www/html is accessible:
+=> sudo chmod 755 /var/www
+=> sudo chmod 755 /var/www/html
+
+
+5. Check SELinux or AppArmor
+SELinux: Check if SELinux is enforcing and whether it’s causing issues.
+=> sestatus
+
+To temporarily disable SELinux:
+=> sudo setenforce 0
+
+To set proper SELinux context for the files:
+=> sudo chcon -R -t httpd_sys_content_t /var/www/html
+
+AppArmor: Check AppArmor profiles and adjust if necessary.
+=> sudo aa-status
+
+To allow Nginx to access files, you might need to adjust the profile or disable it for testing:
+=> sudo aa-disable /etc/apparmor.d/usr.sbin.nginx
+
+
+6. Restart Nginx
+After making changes, restart Nginx to apply them:
+=> sudo systemctl restart nginx
+
+
+
+
+
+
+Necessary Permissions for /var/www/html
+To ensure that Nginx can serve all static files securely:
+
+Directories: 755 (rwxr-xr-x)
+Allows Nginx to traverse directories and list files.
+
+Files: 644 (rw-r--r--)
+Allows Nginx to read files.
